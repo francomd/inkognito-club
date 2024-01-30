@@ -3,6 +3,9 @@ import { AuthContextProvider } from "@/context/AuthContext";
 import { InviteService } from "@/services/inviteService";
 import { UserService } from "@/services/userService";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 async function getInvites() {
   return InviteService.getInvites();
 }
