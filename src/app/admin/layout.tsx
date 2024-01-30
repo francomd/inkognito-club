@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   title: "ADMIN - Inkognito Club",
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <AntdRegistry>
       <ConfigProvider
@@ -26,3 +26,5 @@ export default function RootLayout({
     </AntdRegistry>
   );
 }
+
+export default RootLayout;

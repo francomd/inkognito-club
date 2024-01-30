@@ -4,7 +4,7 @@ import { UserAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function Login() {
+const Login = () => {
   const { googleSignIn } = UserAuth();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -31,3 +31,5 @@ export default function Login() {
     </div>
   )
 }
+
+export default Login

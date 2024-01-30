@@ -16,11 +16,11 @@ export const metadata: Metadata = {
   description: "Club de dibujo cordobés",
 };
 
-export default async function RootLayout({
+const RootLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   const invites = await getInvites();
   const users = await getUsers();
   return (
@@ -33,3 +33,5 @@ export default async function RootLayout({
     </html>
   );
 }
+
+export default RootLayout;

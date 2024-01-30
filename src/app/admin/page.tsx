@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function Admin() {
+const Admin = () => {
   const { user, logOut } = UserAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -33,3 +33,5 @@ export default function Admin() {
     </main>
   );
 }
+
+export default Admin;
