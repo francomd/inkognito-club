@@ -13,7 +13,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-
     <AntdRegistry>
       <ConfigProvider
         theme={{

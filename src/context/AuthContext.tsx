@@ -18,7 +18,7 @@ const AuthContext = createContext(
   }
 );
 
-export const AuthContextProvider = ({ invites, users, children }: { invites: string[], users: TUser[], children: React.ReactNode }) => {
+export const AuthContextProvider = ({ invites = [], users = [], children }: { invites: string[], users: TUser[], children: React.ReactNode }) => {
   const [user, setUser] = useState<TUser | null>(null);
 
   const googleSignIn = (): Promise<TUser> => {
