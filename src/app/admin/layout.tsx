@@ -13,18 +13,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <AntdRegistry>
-        <ConfigProvider
-          theme={{
-            token: {
-              colorPrimary: volcano.primary,
-            },
-          }}
-        >
-          {children}
-        </ConfigProvider>
-      </AntdRegistry>
-    </html>
+
+    <AntdRegistry>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: volcano.primary,
+          },
+        }}
+      >
+        {children}
+      </ConfigProvider>
+    </AntdRegistry>
   );
 }
