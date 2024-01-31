@@ -2,7 +2,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const getInvites = async () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const response = await fetch(`${API_URL}/user/invite`, { cache: "no-cache" });
+  const response = await fetch(`${API_URL}/user/invite`, { cache: "no-store" });
 
   return response.json();
 };

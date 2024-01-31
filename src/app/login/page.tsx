@@ -4,9 +4,6 @@ import { UserAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
-
 const Login = () => {
   const { googleSignIn } = UserAuth();
   const [loading, setLoading] = useState(false);
