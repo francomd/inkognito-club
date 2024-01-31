@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
 import { AuthContextProvider } from "@/context/AuthContext";
-import { InviteService } from "@/services/inviteService";
-import { UserService } from "@/services/userService";
-
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
-
-async function getInvites() {
-  return InviteService.getInvites();
-}
-
-async function getUsers() {
-  return UserService.getAllUsers();
-}
+import FirebaseAdmin from "@/services/firebaseAdminService";
+import { TUser } from "@/types/User";
 
 export const metadata: Metadata = {
   title: "Inkognito Club",
@@ -24,8 +13,31 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const invites = await getInvites();
-  const users = await getUsers();
+
+  const invites = await FirebaseAdmin.firestore()
+    .collection("invites")
+    .doc("list")
+    .get()
+    .then((doc) => {
+      return doc.data() as { userList: string[] };
+    })
+    .then((data) => {
+      return data.userList;
+    });
+
+  console.log(invites);
+
+  const users = await FirebaseAdmin.firestore()
+    .collection("users")
+    .get()
+    .then((snapshot) => {
+      return snapshot.docs.map((doc) => {
+        return doc.data();
+      }) as TUser[];
+    });
+
+  console.log(users);
+
   return (
     <html lang="en">
       <body>

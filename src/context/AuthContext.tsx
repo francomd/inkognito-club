@@ -1,75 +1,114 @@
 'use client'
-import { useContext, createContext, useState, useEffect } from "react";
-import {
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged,
-  GoogleAuthProvider,
-} from "firebase/auth";
-import { auth } from "@/services/firebaseService";
+import { useContext, createContext, useState } from "react";
 import { TUser } from "@/types/User";
-import { UserService } from "@/services/userService";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { auth, firestore } from "@/services/firebaseService";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 const AuthContext = createContext(
   {} as {
     user: TUser | null;
-    googleSignIn: () => Promise<any>;
-    logOut: () => void;
+    setUser: React.Dispatch<React.SetStateAction<TUser | null>>;
+    loading: boolean;
+    logged: boolean;
+    handleSignIn: () => void;
+    handleLogOut: () => void;
   }
 );
 
-export const AuthContextProvider = ({ invites = [], users = [], children }: { invites: string[], users: TUser[], children: React.ReactNode }) => {
+interface IAuthContextProviderProps {
+  users: TUser[];
+  invites: string[];
+  children: React.ReactNode;
+}
+
+export const AuthContextProvider = ({ users, invites, children }: IAuthContextProviderProps) => {
   const [user, setUser] = useState<TUser | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [logged, setLogged] = useState(false);
+  const router = useRouter();
 
-  const googleSignIn = (): Promise<TUser> => {
-    const signInPromise: Promise<TUser> = new Promise((resolve, reject) => {
-      const provider = new GoogleAuthProvider();
-      const result = signInWithPopup(auth, provider);
-      result.then((res) => {
-        const { user: currentUser } = res;
+  const handleSignIn = () => {
+    setLoading(true);
 
-        if (!invites.find(invite => invite === currentUser.email)) {
-          console.log('user not invited')
-          reject('user not invited')
-          return
-        }
+    const provider = new GoogleAuthProvider();
+    const result = signInWithPopup(auth, provider);
 
-        const userRegistered = users.find(_user => _user.email === currentUser.email)
-        // check if user is in database
-        if (!userRegistered) {
-          UserService.newUser({
+    result.then(async (res) => {
+      const { user: currentUser } = res;
+
+      if (!invites.find((invite: string) => invite === currentUser.email)) {
+        console.log('user not invited')
+        return
+      }
+
+      const userRegistered = users.find(_user => _user.email === currentUser.email)
+      // check if user is in database
+      if (!userRegistered) {
+        const users = await getDocs(collection(firestore, 'users'))
+        const usersData = users.docs.map((users: { data: () => any; }) => users.data()) as TUser[];
+
+        if (usersData.some((user) => user.email === currentUser.email)) {
+          console.log("User already exists");
+        } else {
+
+          const newUser = {
             uid: currentUser.uid,
             email: currentUser.email!,
             displayName: currentUser.displayName!,
-            role: 'user',
+            role: 'user' as 'user' | 'admin',
             avatar: currentUser.photoURL || '',
-          }).then((res) => {
-            console.log('user added in database', res)
-            setUser(res);
-            resolve(res);
-          })
-        } else {
-          console.log('user already in database')
-          setUser(userRegistered);
-          resolve(userRegistered);
-        }
-      }).catch((err) => {
-        console.log(err);
-        reject(err);
-      })
-    });
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          }
 
-    return signInPromise;
+          await setDoc(doc(firestore, "users", newUser.uid), {
+            ...newUser,
+          })
+            .then(() => {
+              console.log('user added in database', res)
+              setUser(newUser);
+            })
+            .catch(() => {
+              console.log('error adding user in database')
+            });
+        }
+      } else {
+        console.log('user already in database')
+        setUser(userRegistered);
+      }
+
+      console.log('user logged in', res)
+
+      if (userRegistered?.role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/profile')
+      }
+      setLoading(false);
+      setLogged(true);
+    }).catch((err) => {
+      console.log(err);
+      setLoading(false);
+      setLogged(false);
+    })
   };
 
-  const logOut = () => {
+  const handleLogOut = () => {
+    setLoading(true);
+
     signOut(auth).then(() => {
+      console.log('user logged out')
+      setLoading(false);
+      setLogged(false);
       setUser(null);
+      router.push('/login');
     });
   };
 
   return (
-    <AuthContext.Provider value={{ user, googleSignIn, logOut }}>
+    <AuthContext.Provider value={{ user, setUser, loading, logged, handleSignIn, handleLogOut }}>
       {children}
     </AuthContext.Provider>
   );

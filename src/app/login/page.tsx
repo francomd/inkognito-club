@@ -1,38 +1,12 @@
-'use client'
+import LoginButton from "./LoginButton";
 
-import { UserAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
-
-const Login = () => {
-  const { googleSignIn } = UserAuth();
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  const handleSignIn = async () => {
-    setLoading(true);
-    await googleSignIn().then((res) => {
-      console.log('user signed in', res)
-      router.push('/admin')
-    }).catch((err) => {
-      console.log(err);
-      setLoading(false);
-    })
-  };
-
+const Login = async () => {
   return (
     <div>
       <h1>Login</h1>
-      {loading ? (
-        <p>Let me see who you are...</p>
-      ) : (
-        <button onClick={handleSignIn}>Sign In</button>
-      )}
+      <LoginButton />
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;
