@@ -40,6 +40,7 @@ export const AuthContextProvider = ({ users, invites, children }: IAuthContextPr
 
       if (!invites.find((invite: string) => invite === currentUser.email)) {
         console.log('user not invited')
+        setLoading(false);
         return
       }
 

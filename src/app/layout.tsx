@@ -3,6 +3,9 @@ import { AuthContextProvider } from "@/context/AuthContext";
 import FirebaseAdmin from "@/services/firebaseAdminService";
 import { TUser } from "@/types/User";
 
+export const fetchCache = 'force-no-store';
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Inkognito Club",
   description: "Club de dibujo cordobés",
