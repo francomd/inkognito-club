@@ -3,13 +3,13 @@ import { TUser } from "@/types/User";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const getAllUsers = async () => {
-  const response = await fetch(`${API_URL}/user`);
+  const response = await fetch(`${API_URL}/user`, { cache: "no-cache" });
 
   return response.json();
 };
 
 const getUser = async (uid: Pick<TUser, "uid">) => {
-  const response = await fetch(`${API_URL}/user/${uid}`);
+  const response = await fetch(`${API_URL}/user/${uid}`, { cache: "no-cache" });
 
   return response.json();
 };
