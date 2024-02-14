@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { ConfigProvider } from 'antd';
-import { volcano } from '@ant-design/colors';
+import AdminLayout from "./AdminLayout";
 
 export const metadata: Metadata = {
   title: "ADMIN - Inkognito Club",
@@ -13,17 +11,9 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <AntdRegistry>
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: volcano.primary,
-          },
-        }}
-      >
-        {children}
-      </ConfigProvider>
-    </AntdRegistry>
+    <AdminLayout>
+      {children}
+    </AdminLayout>
   );
 }
 
