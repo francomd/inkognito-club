@@ -87,8 +87,10 @@ export const AuthContextProvider = ({ users, invites, children }: IAuthContextPr
       } else {
         router.push('/profile')
       }
-      setLoading(false);
-      setLogged(true);
+      setTimeout(() => {
+        setLoading(false);
+        setLogged(true);
+      }, 1000);
     }).catch((err) => {
       console.log(err);
       setLoading(false);
