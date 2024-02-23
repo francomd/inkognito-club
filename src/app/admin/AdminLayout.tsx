@@ -1,16 +1,15 @@
 'use client'
 
 import React from 'react';
-// import LoginButton from '../login/LoginButton';
 // import AdminDetails from './AdminDetails';
 import AdminGuard from './AdminGuard';
 
-import { PlusSquareOutlined, UserOutlined } from '@ant-design/icons';
-import { Layout, Menu, } from 'antd';
+import { LogoutOutlined, PlusSquareOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Layout, Menu, } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 import { Typography } from 'antd';
-import { redirect } from 'next/dist/server/api-utils';
 import { usePathname, useRouter } from 'next/navigation';
+import { UserAuth } from '@/context/AuthContext';
 const { Title } = Typography;
 
 const items = [
@@ -22,7 +21,7 @@ const items = [
   {
     key: 'invites',
     icon: <PlusSquareOutlined />,
-    label: 'Invitar',
+    label: 'Invitaciones',
   },
 ];
 
@@ -30,6 +29,7 @@ const items = [
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname()
+  const { handleLogOut } = UserAuth();
 
   const getSelectedMenuByPath = () => {
     return pathname.replace('/admin/', '')
@@ -45,6 +45,15 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           <Menu theme="dark" mode="inline" defaultSelectedKeys={[getSelectedMenuByPath()]} items={items} onSelect={(item) => {
             router.push(`${item.key}`)
           }} />
+          <div style={{ position: 'absolute', bottom: '0', padding: '1rem', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Button
+              type="primary"
+              icon={<LogoutOutlined />}
+              onClick={handleLogOut}
+            >
+              Cerrar sesión
+            </Button>
+          </div>
         </Sider>
         <Layout>
           <Header
