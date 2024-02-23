@@ -6,7 +6,7 @@ const { Item: FormItem } = Form;
 import { useEffect, useState } from 'react';
 import { firestore } from '@/services/firebaseService';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { sendInvite } from '@/app/actions';
+import { sendInvite } from '@/app/actions/sendInvite';
 
 export const fetchCache = 'force-no-store';
 export const dynamic = 'force-dynamic';
