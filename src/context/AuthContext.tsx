@@ -56,6 +56,7 @@ export const AuthContextProvider = ({ users, invites, children }: IAuthContextPr
 
           const newUser = {
             uid: currentUser.uid,
+            memberNumber: usersData.length + 1,
             email: currentUser.email!,
             displayName: currentUser.displayName!,
             role: 'user' as 'user' | 'admin',

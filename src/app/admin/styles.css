@@ -1,0 +1,35 @@
+.ant-layout.ant-layout-has-sider
+  .ant-layout-sider
+  .ant-layout-sider-zero-width-trigger {
+  top: 0.75rem;
+}
+
+@media screen and (max-width: 991px) {
+  .ant-layout .ant-layout-header .ant-typography {
+    padding-left: 2rem;
+  }
+
+  .ant-layout.ant-layout-has-sider .ant-layout-sider {
+    position: absolute;
+    height: 100vh;
+    z-index: 99;
+  }
+
+  .ant-table {
+    overflow-x: auto;
+  }
+}
+
+.logout-button {
+  position: absolute;
+  bottom: 0;
+  padding: 1rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-layout-sider-collapsed .logout-button {
+  left: -6rem;
+}

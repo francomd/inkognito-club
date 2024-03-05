@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // import AdminDetails from './AdminDetails';
 import AdminGuard from './AdminGuard';
 
@@ -11,6 +11,8 @@ import { Typography } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import { UserAuth } from '@/context/AuthContext';
 const { Title } = Typography;
+import "./styles.css"
+import { isDesktop, isMobile } from 'react-device-detect';
 
 const items = [
   {
@@ -30,22 +32,31 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname()
   const { handleLogOut } = UserAuth();
+  const [isSiderCollapsed, setIsSiderCollapsed] = useState(true);
 
   const getSelectedMenuByPath = () => {
     return pathname.replace('/admin/', '')
   }
 
+  useEffect(() => {
+
+    isDesktop && setIsSiderCollapsed(false)
+  }, [isDesktop])
+
   return (
     <AdminGuard>
-      <Layout style={{ height: "100vh" }}>
+      <Layout style={{ height: "100vh" }} hasSider>
         <Sider
           breakpoint="lg"
           collapsedWidth="0"
+          collapsed={isSiderCollapsed}
+          onCollapse={(collapsed) => setIsSiderCollapsed(collapsed)}
         >
           <Menu theme="dark" mode="inline" defaultSelectedKeys={[getSelectedMenuByPath()]} items={items} onSelect={(item) => {
             router.push(`${item.key}`)
+            isMobile && setIsSiderCollapsed(true)
           }} />
-          <div style={{ position: 'absolute', bottom: '0', padding: '1rem', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className='logout-button'>
             <Button
               type="primary"
               icon={<LogoutOutlined />}
